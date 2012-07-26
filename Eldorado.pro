@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui phonon
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,13 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     lib/httpclient.cpp \
     lib/playlist.cpp \
-    lib/parser.cpp
+    lib/parser.cpp \
+    lib/stream.cpp
 
 HEADERS  += mainwindow.h \
     lib/httpclient.h \
     configure.h \
     lib/playlist.h \
-    lib/parser.h
+    lib/parser.h \
+    lib/stream.h
 
 FORMS    += mainwindow.ui
 

@@ -5,6 +5,9 @@
 #include "configure.h"
 #include "lib/httpclient.h"
 #include "lib/parser.h"
+#include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
 
 class Playlist : public QThread
 {
@@ -13,8 +16,18 @@ public:
     Playlist(QObject *parent = 0);
     ~Playlist();
 
-private:
+
     void run();
+
+signals:
+    void UpdatePlaylist(PlayStructList playlist);
+
+private:
+    QMutex mutex;
+    QWaitCondition cond;
+
+    bool quit;
+
 };
 
 #endif // PLAYLIST_H

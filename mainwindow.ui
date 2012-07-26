@@ -14,16 +14,6 @@
    <string>Eldorado</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QListView" name="searchView">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>281</width>
-      <height>451</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QListView" name="playlistView">
     <property name="geometry">
      <rect>
@@ -82,9 +72,9 @@
    <widget class="QLineEdit" name="searchEdit">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>490</y>
-      <width>281</width>
+      <width>291</width>
       <height>21</height>
      </rect>
     </property>
@@ -113,6 +103,16 @@
     </property>
     <property name="text">
      <string>Playlist</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="searchView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>291</width>
+      <height>451</height>
+     </rect>
     </property>
    </widget>
   </widget>

@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <qlistview.h>
+ #include <QMetaType>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,12 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     InitPlaylist();
 
-    //init thread loop
-    //Playlist playlist_loop;
-    //playlist_loop.start();
+    search_model = new QStandardItemModel();
 
-    connect(&playlist_thread, SIGNAL(renderedImage(const QImage &, double)),
-                 this, SLOT(updatePixmap(const QImage &, double)));
+
+    search_model->setHorizontalHeaderLabels(
+        QStringList() << QApplication::translate("nestedlayouts", "Song")
+                      << QApplication::translate("nestedlayouts", "Url "));
 
 
     qDebug() << "hello from GUI thread " << QThread::currentThread();
@@ -23,6 +25,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->searchButton, SIGNAL(clicked()), this , SLOT(SearchSongHandler()));
     QObject::connect(ui->addButton, SIGNAL(clicked()), this , SLOT(AddSongHandler()));
 
+    ui->searchView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    qRegisterMetaType<PlayStructList>("PlayStructList");
+    connect(&playlist_thread, SIGNAL(UpdatePlaylist(PlayStructList)), this,
+                                SLOT(ShowPlaylist(PlayStructList)));
+
+
+    stream = new Stream;
+    InitStream();
 }
 
 MainWindow::~MainWindow()
@@ -43,23 +53,57 @@ void MainWindow::SearchSongHandler()
     std::istringstream is(response);
     Parser *p = new Parser();
     SearchListList searchlist = p->ReadSearchlist(is);
-    QStringListModel *model = new QStringListModel();
-    QStringList list;
-
+    //QStringListModel *model = new QStringListModel();
+    search_model->clear();
+    QList<QStringList> rows;
 
     std::vector<SearchList>::iterator it;
     for ( it=searchlist.begin() ; it < searchlist.end(); it++ )
     {
-        std::cout << (*it).title << "\n";
-        list << (*it).title.c_str();
+        QStringList list;
+        std::cout << (*it).title << (*it).url << "\n";
+        list << QString::fromUtf8((*it).title.c_str()) << (*it).url.c_str();
+        rows.append(list);
     }
-    model->setStringList(list);
-    ui->searchView->setModel(model);
+    foreach (QStringList row, rows) {
+        QList<QStandardItem *> items;
+        foreach (QString text, row)
+            items.append(new QStandardItem(text));
+        search_model->appendRow(items);
+    }
+    //search_model->setStringList(list);
+    ui->searchView->setModel(search_model);
 }
 
 void MainWindow::AddSongHandler()
 {
-    //ui->searchView->SelectedClicked();
+    qDebug() << "AddSongHandler";
+    //ui->searchView->selectedItem();
+
+    QString name_song;
+    QString url_song;
+    foreach(const QModelIndex &index, ui->searchView->selectionModel()->selectedIndexes())
+    {
+        QModelIndex url_song_index = index.sibling(index.row(),1);
+        url_song = url_song_index.data().toString();
+        name_song = index.data().toString();
+        //list.append(search_model->data(index));
+        //list.append(search_model->itemFromIndex(index)->text());
+    }
+    if (name_song.size() == 0)
+    {
+        qDebug() << "song name is empty";
+        return;
+    }
+
+    boost::asio::io_service io_service;
+    std::string utf_string = name_song.toUtf8().constData();
+    std::string query = "/add?title="+utf_string+"&link="+url_song.toUtf8().constData();
+    HttpClient c(io_service, "mts.local", query);
+    io_service.run();
+
+    //qDebug() << list.join(",");
+
 }
 
 void MainWindow::InitPlaylist()
@@ -75,15 +119,43 @@ void MainWindow::InitPlaylist()
     PlayStructList playlist = p->ReadPlaylist(is);
     //is.clear();
 
-    QStringListModel *model = new QStringListModel();
+    playlist_model = new QStringListModel();
     QStringList list;
 
 
     std::vector<PlayStruct>::iterator it;
     for ( it=playlist.begin() ; it < playlist.end(); it++ )
     {
-        list << (*it).song_name.c_str();
+        //model->insertRow(it,(*it).song_name.c_str());
+        list << QString::fromUtf8((*it).song_name.c_str());
     }
-    model->setStringList(list);
-    ui->playlistView->setModel(model);
+    playlist_model->setStringList(list);
+    ui->playlistView->setModel(playlist_model);
+}
+
+void MainWindow::ShowPlaylist(PlayStructList playlist)
+{
+    qDebug() << "TEST";
+    QStringList list;
+    std::vector<PlayStruct>::iterator it;
+    for ( it=playlist.begin() ; it < playlist.end(); it++ )
+    {
+        //qDebug() << (*it).song_name.c_str();
+        list << QString::fromUtf8((*it).song_name.c_str());
+    }
+
+    //MainWindow window;
+
+    playlist_model->setStringList(list);
+
+}
+
+void MainWindow::InitStream()
+{
+    //QString string = "http://192.168.0.60:8000/test";
+    QString string = "http://voxsc1.somafm.com:2020";
+    QUrl url(string);
+
+    stream->SetUrl(url);
+    stream->playNow();
 }

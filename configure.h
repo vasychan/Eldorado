@@ -19,5 +19,16 @@
 #include <QtDebug>
 #include <QtGui>
 #include <QMainWindow>
+#include <qlistview.h>
+#include <QMessageBox>
+#include <QDesktopServices>
+#include <QFileDialog>
+#include <QUrl>
+
+#include <phonon/audiooutput.h>
+#include <phonon/seekslider.h>
+#include <phonon/mediaobject.h>
+#include <phonon/volumeslider.h>
+#include <phonon/backendcapabilities.h>
 
 #endif // CONFIGURE_H
