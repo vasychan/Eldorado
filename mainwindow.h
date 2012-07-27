@@ -20,9 +20,11 @@ public:
 
 
 
+
 private:
     void InitPlaylist();
     void InitStream();
+
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +43,7 @@ public slots:
     void SearchSongHandler();
     void AddSongHandler();
     void ShowPlaylist(PlayStructList playlist);
+    void StartStopStream();
 };
 
 #endif // MAINWINDOW_H

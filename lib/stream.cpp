@@ -3,6 +3,7 @@
 #include <QtGui>
 
  Stream::Stream()
+     : is_playing(false)
  {
      audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
      mediaObject = new Phonon::MediaObject(this);
@@ -48,6 +49,7 @@
  {
     mediaObject->stop();
     mediaObject->clearQueue();
+    this->is_playing = false;
  }
  /*
   * --------------------------------------------------------------
@@ -69,6 +71,7 @@
 
     mediaObject->setCurrentSource(source);
     mediaObject->play();
+    this->is_playing = true;
  }
 
  /*

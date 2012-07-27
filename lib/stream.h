@@ -31,6 +31,8 @@
      QLCDNumber*            timeLcd;
      Phonon::VolumeSlider*  volumeSlider;
      QWidget*               dummy;
+
+     bool is_playing;
  public slots:
      void playNow();
      void StopPlay();
@@ -46,6 +48,7 @@ signals:
 private:
      void setupUi();
 private:
+
 
  };
 #endif // STREAM_H

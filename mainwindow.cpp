@@ -32,7 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     stream = new Stream;
+
     InitStream();
+    //connect button stop stream
+    QObject::connect(ui->pauseButton, SIGNAL(clicked()), this , SLOT(StartStopStream()));
+
 }
 
 MainWindow::~MainWindow()
@@ -114,7 +118,7 @@ void MainWindow::InitPlaylist()
 
     std::string t = c.getResponse();
     //std::cout << t << "\n";
-    std::istringstream is(t);
+    std::istringstream is(t);QObject::connect(ui->addButton, SIGNAL(clicked()), this , SLOT(AddSongHandler()));
     Parser *p = new Parser();
     PlayStructList playlist = p->ReadPlaylist(is);
     //is.clear();
@@ -158,4 +162,20 @@ void MainWindow::InitStream()
 
     stream->SetUrl(url);
     stream->playNow();
+}
+
+void MainWindow::StartStopStream()
+{
+    if (stream->is_playing)
+    {
+        stream->StopPlay();
+        QIcon icon = QIcon(":/icons/pause.png");
+        ui->pauseButton->setIcon(icon);
+    }
+    else
+    {
+        stream->playNow();
+        QIcon icon = QIcon(":/icons/play.png");
+        ui->pauseButton->setIcon(icon);
+    }
 }

@@ -39,3 +39,6 @@ DEPENDPATH += $$PWD/../../../../usr/include/boost
 win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/release/boost_system.lib
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../usr/lib/debug/boost_system.lib
 else:unix:!symbian: PRE_TARGETDEPS += $$PWD/../../../../usr/lib/libboost_system.a
+
+RESOURCES += \
+    res/icons.qrc
