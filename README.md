@@ -1,4 +1,4 @@
-Eldorado
+Eldorado v.0.0.1 ALPHA
 ========
 
 is a MTS client writed of QT. Make, simple client.
