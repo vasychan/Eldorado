@@ -66,12 +66,20 @@
   */
  void Stream::playNow()
  {
-    mediaObject->stop();
-    mediaObject->clearQueue();
+    try
+    {
+        mediaObject->stop();
+        mediaObject->clearQueue();
 
-    mediaObject->setCurrentSource(source);
-    mediaObject->play();
-    this->is_playing = true;
+        mediaObject->setCurrentSource(source);
+        mediaObject->play();
+        this->is_playing = true;
+    }
+     catch(std::exception const& e)
+     {
+         qDebug() << "exception PlayNow";
+         this->is_playing = false;
+     }
  }
 
  /*
@@ -83,17 +91,23 @@
      switch (newState) {
          case Phonon::ErrorState:
              if(mediaObject){
+                 playNow();
+                 /*
                  if (mediaObject->errorType() == Phonon::FatalError) {
-                     QMessageBox::warning(this, tr("Fatal Error"),
-                     mediaObject->errorString());
+                     //QMessageBox::warning(this, tr("Fatal Error"),
+                     //mediaObject->errorString());
                  } else {
-                    QMessageBox::warning(this, tr("Error"),
-                    mediaObject->errorString());
+                    //QMessageBox::warning(this, tr("Error"),
+                    //mediaObject->errorString());
                  }
              }else{
-                 QMessageBox::warning(this, tr("Error"),tr("Media is NULL"));
+                 //QMessageBox::warning(this, tr("Error"),tr("Media is NULL"));
              }
-             break;
+             */
+
+                 qDebug() << "ERROR MEDIA STREAM!!";
+                 break;
+             }
          case Phonon::PlayingState:
                  mStatusLabel->setText("PlayingState");
                  playAction->setEnabled(false);
@@ -117,6 +131,7 @@
                  mStatusLabel->setText("BufferingState");
                  break;
          default:
+         qDebug() << "default set state";
              break;
      }
  }
