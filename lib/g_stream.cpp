@@ -8,9 +8,9 @@ g_stream::g_stream()
     // autoaudiosrc ! audioconvert ! lame bitrate=192 ! filesink location=./ciao.mp3
     recordBin = gst_pipeline_new("record-pipeline");
     g_assert(recordBin);
-    GstElement *audioSrc = gst_element_factory_make("autoaudiosrc", "audio_in");
+    audioSrc = gst_element_factory_make("autoaudiosrc", "audio_in");
     g_assert(audioSrc);
-    GstElement *audioConvert = gst_element_factory_make("audioconvert", "audio_converter");
+    audioConvert = gst_element_factory_make("audioconvert", "audio_converter");
     g_assert(audioConvert);
     lameEncoder = gst_element_factory_make("lame", "lame_encoder");
     g_assert(audioConvert);
@@ -51,11 +51,31 @@ void g_stream::stop()
 
 void g_stream::play()
 {
-    qDebug() << "PLAY";
-    g_object_set(G_OBJECT(playbackBin), "uri", qPrintable(m_Uri), NULL);
-    gst_element_set_state(GST_ELEMENT(recordBin), GST_STATE_READY);
-    gst_element_set_state(GST_ELEMENT(playbackBin), GST_STATE_PLAYING);
-    this->is_playing = true;
+        qDebug() << "PLAY";
+        g_object_set(G_OBJECT(playbackBin), "uri", qPrintable(m_Uri), NULL);
+        gst_element_set_state(GST_ELEMENT(recordBin), GST_STATE_READY);
+        gst_element_set_state(GST_ELEMENT(playbackBin), GST_STATE_PLAYING);
+        this->is_playing = true;
+}
+
+void g_stream::replay()
+{
+    GstStateChangeReturn ret;
+    GstState state = GST_STATE_PLAYING;
+    ret = gst_element_get_state(GST_ELEMENT(playbackBin),NULL, NULL, NULL);
+    qDebug() << gst_element_get_state (playbackBin, NULL, NULL, -1);
+    qDebug() << gst_element_get_state (audioSrc, NULL, NULL, -1);
+    qDebug() << gst_element_get_state (audioConvert, NULL, NULL, -1);
+    qDebug() << gst_element_get_state (lameEncoder, NULL, NULL, -1);
+    qDebug() << gst_element_get_state (fileSink, NULL, NULL, -1);
+    //qDebug() << ret;
+    //if( ret != GST_STATE_CHANGE_SUCCESS)
+    if (gst_element_get_state (playbackBin, NULL, NULL, -1) == GST_STATE_CHANGE_FAILURE)
+    {
+    qDebug() << "RESTART!!!";
+    stop();
+    play();
+    }
 }
 
 void g_stream::SetUrl(const QString& uri)

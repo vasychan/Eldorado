@@ -11,12 +11,13 @@ public:
     void record(const QString& filename, const int bitrate);
     void stop();
     void play();
+    void replay();
     void SetUrl(const QString& uri);
 
 public:
     bool is_playing;
 private:
-    GstElement *playbackBin, *recordBin, *fileSink, *lameEncoder;
+    GstElement *playbackBin, *recordBin, *fileSink, *lameEncoder, *audioSrc, *audioConvert;
     QString m_Uri;
 };
 

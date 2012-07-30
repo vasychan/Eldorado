@@ -160,10 +160,7 @@ void MainWindow::ShowPlaylist(PlayStructList playlist)
     playlist_model->setStringList(list);
 
     //HACK!!!!
-    if (stream->is_playing == true)
-    {
-         stream->play();
-    }
+    stream->replay();
 }
 
 void MainWindow::InitStream()
