@@ -17,17 +17,23 @@ SOURCES += main.cpp\
     lib/httpclient.cpp \
     lib/playlist.cpp \
     lib/parser.cpp \
-    lib/stream.cpp
+    lib/stream.cpp \
+    lib/g_stream.cpp
 
 HEADERS  += mainwindow.h \
     lib/httpclient.h \
     configure.h \
     lib/playlist.h \
     lib/parser.h \
-    lib/stream.h
+    lib/stream.h \
+    lib/g_stream.h
 
 FORMS    += mainwindow.ui
 
+unix {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += gstreamer-0.10
+}
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/release/ -lboost_system
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/debug/ -lboost_system
 else:symbian: LIBS += -lboost_system

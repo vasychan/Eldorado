@@ -30,5 +30,5 @@
 #include <phonon/mediaobject.h>
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
-
+#include <gst/gst.h>
 #endif // CONFIGURE_H

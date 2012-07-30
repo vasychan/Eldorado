@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
                                 SLOT(ShowPlaylist(PlayStructList)));
 
 
-    stream = new Stream;
+    //stream = new Stream;
+    stream = new g_stream;
 
     InitStream();
     //connect button stop stream
@@ -159,20 +160,44 @@ void MainWindow::ShowPlaylist(PlayStructList playlist)
     playlist_model->setStringList(list);
 
     //HACK!!!!
-    if (stream->mediaObject->state() != Phonon::PlayingState && stream->is_playing == true)
+    if (stream->is_playing == true)
     {
-         stream->playNow();
+         stream->play();
     }
 }
 
 void MainWindow::InitStream()
 {
-    QString string = "http://192.168.0.60:8000/test";
+    /*
+    gst_init (NULL,NULL);
+     // Record pipeline
+     // autoaudiosrc ! audioconvert ! lame bitrate=192 ! filesink location=./ciao.mp3
+     GstElement *recordBin = gst_pipeline_new("record-pipeline");
+     g_assert(recordBin);
+     GstElement *audioSrc = gst_element_factory_make("autoaudiosrc", "audio_in");
+     g_assert(audioSrc);
+     GstElement *audioConvert = gst_element_factory_make("audioconvert", "audio_converter");
+     g_assert(audioConvert);
+     GstElement *lameEncoder = gst_element_factory_make("lame", "lame_encoder");
+     g_assert(audioConvert);
+     GstElement *fileSink = gst_element_factory_make("filesink", "file_sink");
+     g_assert(fileSink);
+     gst_bin_add_many(GST_BIN(recordBin), audioSrc, audioConvert, lameEncoder, fileSink, NULL);
+     gst_element_link_many(audioSrc, audioConvert, lameEncoder, fileSink, NULL);
+     // Playback
+     GstElement *playbackBin = gst_element_factory_make("playbin2", "playbin");
+     g_assert(playbackBin);
+     QString uri = "http://192.168.0.60:8000/test";
+    qDebug() << uri;
+     g_object_set(G_OBJECT(playbackBin), "uri", qPrintable(uri), NULL);
+     gst_element_set_state(GST_ELEMENT(recordBin), GST_STATE_READY);
+     gst_element_set_state(GST_ELEMENT(playbackBin), GST_STATE_PLAYING);
+    */
+    QString uri = "http://192.168.0.60:8000/test";
     //QString string = "http://voxsc1.somafm.com:2020";
-    QUrl url(string);
 
-    stream->SetUrl(url);
-    stream->playNow();
+    stream->SetUrl(uri);
+    stream->play();
     //QMap<QString, QString> metaData = stream->mediaObject->metaData();
     //QString title = metaData.value("TITLE");
     //qDebug() << title.toUtf8().constData();
@@ -181,26 +206,16 @@ void MainWindow::InitStream()
 
 void MainWindow::StartStopStream()
 {
-
     if (stream->is_playing)
     {
-        stream->StopPlay();
+        stream->stop();
         QIcon icon = QIcon(":/icons/pause.png");
         ui->pauseButton->setIcon(icon);
     }
     else
     {
-        stream->playNow();
+        stream->play();
         QIcon icon = QIcon(":/icons/play.png");
         ui->pauseButton->setIcon(icon);
-        /*
-        QMap<QString, QString> metaData = stream->mediaObject->metaData();
-        //QString title = metaData.value("TITLE");
-        QString title = metaData.value("ARTIST");
-        if (title == "")
-                 title = stream->mediaObject->currentSource().fileName();
-        qDebug() << title.toUtf8().constData();
-        ui->songNameLabel->setText(title);
-        */
     }
 }
