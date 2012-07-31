@@ -5,7 +5,8 @@
  Stream::Stream()
      : is_playing(false)
  {
-     audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+     audioOutput = new Phonon::AudioOutput(Phonon::VideoCategory, this);
+     //audioOutput = new Phonon::AudioOutput(Phonon::CommunicationCategory, this);
      mediaObject = new Phonon::MediaObject(this);
 
      mediaObject->setTickInterval(1000);
@@ -68,6 +69,7 @@
  {
     try
     {
+        qDebug() << "PLAY NOW";
         mediaObject->stop();
         mediaObject->clearQueue();
 
@@ -77,7 +79,7 @@
     }
      catch(std::exception const& e)
      {
-         qDebug() << "exception PlayNow";
+        qDebug() << "exception PlayNow";
          this->is_playing = false;
      }
  }
@@ -88,33 +90,38 @@
   */
  void Stream::stateChanged(Phonon::State newState, Phonon::State /* oldState */)
  {
+         qDebug() << "stateChanged";
+         qDebug() << mediaObject->state();
+         qDebug() << newState;
      switch (newState) {
          case Phonon::ErrorState:
-             if(mediaObject){
-                 playNow();
-                 /*
-                 if (mediaObject->errorType() == Phonon::FatalError) {
-                     //QMessageBox::warning(this, tr("Fatal Error"),
-                     //mediaObject->errorString());
-                 } else {
-                    //QMessageBox::warning(this, tr("Error"),
-                    //mediaObject->errorString());
-                 }
-             }else{
-                 //QMessageBox::warning(this, tr("Error"),tr("Media is NULL"));
-             }
-             */
+             if(mediaObject)
+             {
+                 //playNow();
 
-                 qDebug() << "ERROR MEDIA STREAM!!";
-                 break;
+                 if (mediaObject->errorType() == Phonon::FatalError)
+                 {
+                        qDebug() << "Fatal Error";
+                        qDebug() << mediaObject->errorString();
+                 } else {
+                        qDebug() << "Error";
+                        qDebug() << mediaObject->errorString();
+                 }
              }
+                else
+             {
+                        qDebug() << "Error: Media is NULL";
+             }
+             break;
          case Phonon::PlayingState:
+                 qDebug() << "PlayingState";
                  mStatusLabel->setText("PlayingState");
                  playAction->setEnabled(false);
                  pauseAction->setEnabled(true);
                  stopAction->setEnabled(true);
                  break;
          case Phonon::StoppedState:
+                 qDebug() << "StoppedState";
                  mStatusLabel->setText("StoppedState");
                  stopAction->setEnabled(false);
                  playAction->setEnabled(true);
@@ -122,12 +129,14 @@
                  timeLcd->display("00:00");
                  break;
          case Phonon::PausedState:
+                 qDebug() << "PausedState";
                  mStatusLabel->setText("PausedState");
                  pauseAction->setEnabled(false);
                  stopAction->setEnabled(true);
                  playAction->setEnabled(true);
                  break;
          case Phonon::BufferingState:
+                 qDebug() << "BufferingState";
                  mStatusLabel->setText("BufferingState");
                  break;
          default:
@@ -142,6 +151,7 @@
   */
  void Stream::setBufferingValue(int value)
 {
+         qDebug() << "setBufferingValue";
      QString statt = "Buffering: " + QString::number(value);
      mStatusLabel->setText(statt);
 }
@@ -152,6 +162,7 @@
   */
  void Stream::sourceChanged(const Phonon::MediaSource& /*source*/)
  {
+         qDebug() << "sourceChanged";
     mStatusLabel->setText("sourceChanged");
     timeLcd->display("00:00");
  }
@@ -162,7 +173,7 @@
  void Stream::tick(qint64 time)
  {
      QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-
+        qDebug() << displayTime;
      timeLcd->display(displayTime.toString("mm:ss"));
  }
 
@@ -172,6 +183,7 @@
   */
  void Stream::aboutToFinish()
  {
+         qDebug() << "aboutToFinish";
      emit backButtonPressed();
  }
 

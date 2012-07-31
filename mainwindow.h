@@ -3,7 +3,7 @@
 
 
 #include "lib/playlist.h"
-#include "lib/g_stream.h"
+#include "lib/stream.h"
 #include "configure.h"
 
 namespace Ui {
@@ -35,8 +35,9 @@ private:
     Phonon::MediaObject*   mediaObject;
     Phonon::AudioOutput*   audioOutput;
 
-    g_stream *stream;
-
+    Stream *stream;
+    std::string m_currentSong;
+    std::string m_nextSong;
 
 
 public slots:

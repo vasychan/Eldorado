@@ -4,6 +4,7 @@
 #include <iostream>
 #include <istream>
 #include <ostream>
+#include <stdlib.h>
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -30,5 +31,10 @@
 #include <phonon/mediaobject.h>
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
-#include <gst/gst.h>
+
+#include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
+
+
 #endif // CONFIGURE_H
