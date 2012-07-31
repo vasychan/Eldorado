@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     stream = new Stream;
+    QObject::connect(stream, SIGNAL(UpdateTimer(QTime displayTime)), this, SLOT(ShowTimer(QTime displayTime)));
+
 
     InitStream();
     //connect button stop stream
@@ -181,6 +183,12 @@ qDebug() << "RELOAD";
          if (stream->mediaObject->state() == 2 || stream->mediaObject->state() == 0  )
                 m_currentSong = _song;
     }
+}
+
+void MainWindow::ShowTimer(QTime displayTime)
+{
+    qDebug() << "ShowTimer";
+    //ui->labelClock->setText(displayTime.toString("mm:ss"));
 }
 
 void MainWindow::InitStream()
