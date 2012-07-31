@@ -36,7 +36,8 @@ private:
     Phonon::AudioOutput*   audioOutput;
 
     Stream *stream;
-
+    std::string m_currentSong;
+    std::string m_nextSong;
 
 
 public slots:

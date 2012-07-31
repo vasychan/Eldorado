@@ -28,14 +28,13 @@ void Playlist::run()
 
     while(!quit)
     {
-        qDebug() << "start from worker thread " << thread()->currentThreadId() ;
+        //qDebug() << "start from worker thread " << thread()->currentThreadId() ;
         sleep(1);
         boost::asio::io_service io_service;
         HttpClient c(io_service, "mts.local", "/playlist");
         io_service.run();
 
         std::string t = c.getResponse();
-        //std::cout << t << "\n";
         std::istringstream is(t);
         Parser *p = new Parser();
         PlayStructList playlist = p->ReadPlaylist( is);
@@ -44,7 +43,7 @@ void Playlist::run()
         emit UpdatePlaylist(playlist);
         //mutex.unlock();
 
-        qDebug() << "end from worker thread " << thread()->currentThreadId() ;
+        //qDebug() << "end from worker thread " << thread()->currentThreadId() ;
 
     }
 

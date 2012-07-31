@@ -6,6 +6,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
+    , m_currentSong("empty")
 {
     //init
 
@@ -49,7 +50,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::SearchSongHandler()
 {
-    qDebug() << ui->searchEdit->text();
+    //qDebug() << ui->searchEdit->text();
     QString string = ui->searchEdit->text();
     boost::asio::io_service io_service;
     std::string utf_string = string.toUtf8().constData();
@@ -68,7 +69,7 @@ void MainWindow::SearchSongHandler()
     for ( it=searchlist.begin() ; it < searchlist.end(); it++ )
     {
         QStringList list;
-        std::cout << (*it).title << (*it).url << "\n";
+        //std::cout << (*it).title << (*it).url << "\n";
         list << QString::fromUtf8((*it).title.c_str()) << (*it).url.c_str() << (*it).duration.c_str();
         rows.append(list);
     }
@@ -84,7 +85,7 @@ void MainWindow::SearchSongHandler()
 
 void MainWindow::AddSongHandler()
 {
-    qDebug() << "AddSongHandler";
+    //qDebug() << "AddSongHandler";
     //ui->searchView->selectedItem();
 
     QString name_song;
@@ -102,14 +103,14 @@ void MainWindow::AddSongHandler()
     }
     if (name_song.size() == 0)
     {
-        qDebug() << "song name is empty";
+        //qDebug() << "song name is empty";
         return;
     }
 
     boost::asio::io_service io_service;
     std::string utf_string = name_song.toUtf8().constData();
     std::string query = "/add?title="+utf_string+"&link="+url_song.toUtf8().constData()+"&duration="+duration_song.toUtf8().constData();
-    qDebug() << query.c_str();
+    //qDebug() << query.c_str();
     HttpClient c(io_service, "mts.local", query);
     io_service.run();
 
@@ -147,7 +148,8 @@ void MainWindow::InitPlaylist()
 
 void MainWindow::ShowPlaylist(PlayStructList playlist)
 {
-    qDebug() << "TEST";
+    //qDebug() << "TEST";
+
     QStringList list;
     std::vector<PlayStruct>::iterator it;
     for ( it=playlist.begin() ; it < playlist.end(); it++ )
@@ -159,12 +161,16 @@ void MainWindow::ShowPlaylist(PlayStructList playlist)
     //MainWindow window;
 
     playlist_model->setStringList(list);
-    ui->labelSongName->setText(list[0]);
+
     //HACK!!!!
     qDebug() << stream->mediaObject->state();
-    if (stream->mediaObject->state() != Phonon::PlayingState && stream->is_playing == true)
+    if (reload || stream->mediaObject->state() == 5)
     {
+qDebug() << "RELOAD";
+         stream->StopPlay();
          stream->playNow();
+         if (stream->mediaObject->state() == 2 || stream->mediaObject->state() == 0  )
+                m_currentSong = _song;
     }
 }
 
