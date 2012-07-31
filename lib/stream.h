@@ -45,6 +45,7 @@
      void tick(qint64 time);
 signals:
      void backButtonPressed();
+     void UpdateTimer(QTime time);
 private:
      void setupUi();
 private:

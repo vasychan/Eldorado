@@ -29,7 +29,7 @@ void Playlist::run()
     while(!quit)
     {
         qDebug() << "start from worker thread " << thread()->currentThreadId() ;
-        sleep(3);
+        sleep(1);
         boost::asio::io_service io_service;
         HttpClient c(io_service, "mts.local", "/playlist");
         io_service.run();

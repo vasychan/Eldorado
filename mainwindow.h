@@ -43,6 +43,7 @@ public slots:
     void SearchSongHandler();
     void AddSongHandler();
     void ShowPlaylist(PlayStructList playlist);
+    void ShowTimer(QTime displayTime);
     void StartStopStream();
 };
 

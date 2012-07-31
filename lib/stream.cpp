@@ -91,7 +91,7 @@
      switch (newState) {
          case Phonon::ErrorState:
              if(mediaObject){
-                 playNow();
+                 //playNow();
                  /*
                  if (mediaObject->errorType() == Phonon::FatalError) {
                      //QMessageBox::warning(this, tr("Fatal Error"),
@@ -162,8 +162,10 @@
  void Stream::tick(qint64 time)
  {
      QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-
-     timeLcd->display(displayTime.toString("mm:ss"));
+     qDebug() << displayTime;
+     qDebug() << displayTime.toString("mm:ss");
+     //timeLcd->display(displayTime.toString("mm:ss"));
+     emit UpdateTimer(displayTime);
  }
 
  /*
@@ -172,6 +174,7 @@
   */
  void Stream::aboutToFinish()
  {
+     qDebug() << "aboutToFinish";
      emit backButtonPressed();
  }
 
