@@ -32,8 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     stream = new Stream;
-    QObject::connect(stream, SIGNAL(UpdateTimer(QTime displayTime)), this, SLOT(ShowTimer(QTime displayTime)));
-
 
     InitStream();
     //connect button stop stream
@@ -159,19 +157,12 @@ void MainWindow::ShowPlaylist(PlayStructList playlist)
     //MainWindow window;
 
     playlist_model->setStringList(list);
-    ui->labelSongName->setText(list[0]);
+
     //HACK!!!!
-    qDebug() << stream->mediaObject->state();
     if (stream->mediaObject->state() != Phonon::PlayingState && stream->is_playing == true)
     {
          stream->playNow();
     }
-}
-
-void MainWindow::ShowTimer(QTime displayTime)
-{
-    qDebug() << "ShowTimer";
-    //ui->labelClock->setText(displayTime.toString("mm:ss"));
 }
 
 void MainWindow::InitStream()
