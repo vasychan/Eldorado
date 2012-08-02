@@ -43,8 +43,9 @@ public slots:
     void SearchSongHandler();
     void AddSongHandler();
     void ShowPlaylist(PlayStructList playlist);
-    void ShowTimer(QTime displayTime);
+    //void ShowTimer(QTime displayTime);
     void StartStopStream();
+    void tick(qint64 time);
 };
 
 #endif // MAINWINDOW_H

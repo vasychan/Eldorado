@@ -9,7 +9,7 @@
      mediaObject = new Phonon::MediaObject(this);
 
      mediaObject->setTickInterval(1000);
-     connect(mediaObject, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
+     //connect(mediaObject, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
      connect(mediaObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)),this, SLOT(stateChanged(Phonon::State,Phonon::State)));
      connect(mediaObject, SIGNAL(currentSourceChanged(Phonon::MediaSource)),this, SLOT(sourceChanged(Phonon::MediaSource)));
      connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(aboutToFinish()));
@@ -159,15 +159,20 @@
   * --------------------------------------------------------------
   * --------------------------------------------------------------
   */
- void Stream::tick(qint64 time)
+ /*void Stream::tick(qint64 time)
  {
      QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-     qDebug() << displayTime;
-     qDebug() << displayTime.toString("mm:ss");
      //timeLcd->display(displayTime.toString("mm:ss"));
-     emit UpdateTimer(displayTime);
+     _updatetimer(displayTime);
  }
 
+ void Stream::_updatetimer(QTime displayTime)
+ {
+     qDebug() << displayTime;
+     qDebug() << displayTime.toString("mm:ss");
+     emit UpdateTimer(displayTime);
+ }
+ */
  /*
   * --------------------------------------------------------------
   * --------------------------------------------------------------

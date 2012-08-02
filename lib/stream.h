@@ -32,6 +32,8 @@
      Phonon::VolumeSlider*  volumeSlider;
      QWidget*               dummy;
 
+     void _updatetimer(QTime displayTime);
+
      bool is_playing;
  public slots:
      void playNow();
@@ -42,7 +44,7 @@
      void sourceChanged(const Phonon::MediaSource &source);
      void aboutToFinish();
      void setBufferingValue(int value);
-     void tick(qint64 time);
+     //void tick(qint64 time);
 signals:
      void backButtonPressed();
      void UpdateTimer(QTime time);

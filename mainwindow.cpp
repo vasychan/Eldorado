@@ -32,13 +32,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     stream = new Stream;
-    QObject::connect(stream, SIGNAL(UpdateTimer(QTime displayTime)), this, SLOT(ShowTimer(QTime displayTime)));
 
 
     InitStream();
     //connect button stop stream
     QObject::connect(ui->pauseButton, SIGNAL(clicked()), this , SLOT(StartStopStream()));
     //ui->songNameLabel->setText("test");
+    ui->lcdTime->display("00:00");
+    connect(stream->mediaObject, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
+    //connect(stream, SIGNAL(UpdateTimer(QTime displayTime)), this, SLOT(ShowTimer(QTime displayTime)));
 
 }
 
@@ -168,11 +170,21 @@ void MainWindow::ShowPlaylist(PlayStructList playlist)
     }
 }
 
+void MainWindow::tick(qint64 time)
+ {
+    qDebug() << "ShowTimer";
+     QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
+     ui->lcdTime->display(displayTime.toString("mm:ss"));
+     //_updatetimer(displayTime);
+ }
+
+/*
 void MainWindow::ShowTimer(QTime displayTime)
 {
-    qDebug() << "ShowTimer";
+    //ui->lcdNumber->setValue(displayTime.toString("mm:ss"));
     //ui->labelClock->setText(displayTime.toString("mm:ss"));
 }
+*/
 
 void MainWindow::InitStream()
 {
